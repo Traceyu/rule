@@ -8,6 +8,7 @@ DOMAIN-KEYWORD,1e100
 DOMAIN-SUFFIX,tradingview.com
 DOMAIN-SUFFIX,pepperstone.com
 DOMAIN-SUFFIX,moomoo.com
+DOMAIN-SUFFIX,seekingalpha.com
 
 # IP段匹配
 IP-CIDR,142.171.133.131/32,no-resolve
