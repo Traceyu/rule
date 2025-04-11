@@ -9,6 +9,7 @@ DOMAIN-SUFFIX,tradingview.com
 DOMAIN-SUFFIX,pepperstone.com
 DOMAIN-SUFFIX,moomoo.com
 DOMAIN-SUFFIX,seekingalpha.com
+DOMAIN-SUFFIX,sail-track.com
 
 # IP段匹配
 IP-CIDR,142.171.133.131/32,no-resolve
