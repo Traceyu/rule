@@ -12,6 +12,7 @@ DOMAIN-SUFFIX,seekingalpha.com
 DOMAIN-SUFFIX,5ber.com
 DOMAIN-SUFFIX,longbridge.com
 DOMAIN-SUFFIX,ctrader.com
+DOMAIN-SUFFIX,fastbull.com
 
 # IP段匹配
 IP-CIDR,142.171.133.131/32,no-resolve
