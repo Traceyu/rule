@@ -78,7 +78,7 @@
           "192.168.120.215",
           "192.168.130.5"
         ],
-        "outbound": "Global"
+        "outbound": "GLOBAL"
       },
       {
         "source_ip_cidr": [
