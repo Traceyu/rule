@@ -62,7 +62,7 @@
       {"ip_is_private": true, "outbound": "直连"},
       {"process_name": [
           "OFT.Platform.exe",
-          //"Dropbox.exe",
+          "ibgateway.exe",
           //"git.exe"
         ],
         "action": "route",
