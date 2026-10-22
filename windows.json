@@ -118,6 +118,11 @@
         "fdfe:dcba:9876::1/126"
       ],
       "auto_route": true,
+      "route_exclude_address": [
+        "192.168.0.0/16",
+        "10.0.0.0/8",
+        "172.16.0.0/12"
+      ],
       "platform": {
         "http_proxy": {
           "enabled": true,
