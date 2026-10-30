@@ -68,7 +68,7 @@
       },
       {"process_name": [
           "OFT.Platform.exe",
-          "ibgateway.exe",
+          //"ibgateway.exe",
           //"git.exe"
         ],
         "action": "route",
