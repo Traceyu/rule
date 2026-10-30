@@ -64,7 +64,7 @@
           "ibgateway.exe",
         ],
         "action": "route",
-        "outbound": "直连"
+        "outbound": "桥接"
       },
       {"process_name": [
           "OFT.Platform.exe",
