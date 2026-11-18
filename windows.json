@@ -8,6 +8,7 @@
       {"tag": "node-2", "type": "udp", "server": "119.29.29.29"},
       {"tag": "node-3", "type": "udp", "server": "223.5.5.5"},
       {"tag": "node-4", "type": "udp", "server": "223.6.6.6"},
+      {"tag": "node-bootstrap", "type": "udp", "server": "127.0.0.1", "server_port": 15353, "inet4_bind_address": "127.0.0.1"},
       {"tag": "tx", "type": "https", "server": "doh.pub", "domain_resolver": "hosts"},
       {"tag": "google", "type": "https", "server": "8.8.8.8", "detour": "默认代理"},
       {"tag": "fakeip", "type": "fakeip", "inet4_range": "198.19.0.0/16"},
@@ -15,10 +16,24 @@
     ],
     "rules": [
       {"query_type": ["HTTPS", "SVCB"], "action": "reject"},
-      {"domain_suffix": [".sbs"], "server": "node", "timeout": "2s"},
-      {"domain_suffix": [".sbs"], "server": "node-2", "timeout": "2s"},
-      {"domain_suffix": [".sbs"], "server": "node-3", "timeout": "2s"},
-      {"domain_suffix": [".sbs"], "server": "node-4"},
+      {"domain_suffix": [".sbs"], "action": "evaluate", "server": "node", "tag": "sbs-1", "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "action": "evaluate", "server": "node-2", "tag": "sbs-2", "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "action": "evaluate", "server": "node-3", "tag": "sbs-3", "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "action": "evaluate", "server": "node-4", "tag": "sbs-4", "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"match_response": "sbs-1", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "sbs-1", "ip_is_private": true, "invert": true}], "action": "route", "server": "node", "race": true, "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"match_response": "sbs-2", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "sbs-2", "ip_is_private": true, "invert": true}], "action": "route", "server": "node-2", "race": true, "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"match_response": "sbs-3", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "sbs-3", "ip_is_private": true, "invert": true}], "action": "route", "server": "node-3", "race": true, "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"match_response": "sbs-4", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "sbs-4", "ip_is_private": true, "invert": true}], "action": "route", "server": "node-4", "race": true, "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "action": "reject"},
+      {"inbound": "node-dns-in", "action": "evaluate", "server": "node", "tag": "boot-1", "timeout": "2s"},
+      {"inbound": "node-dns-in", "action": "evaluate", "server": "node-2", "tag": "boot-2", "timeout": "2s"},
+      {"inbound": "node-dns-in", "action": "evaluate", "server": "node-3", "tag": "boot-3", "timeout": "2s"},
+      {"inbound": "node-dns-in", "action": "evaluate", "server": "node-4", "tag": "boot-4", "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"inbound": "node-dns-in"}, {"match_response": "boot-1", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "boot-1", "ip_is_private": true, "invert": true}], "action": "route", "server": "node", "race": true, "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"inbound": "node-dns-in"}, {"match_response": "boot-2", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "boot-2", "ip_is_private": true, "invert": true}], "action": "route", "server": "node-2", "race": true, "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"inbound": "node-dns-in"}, {"match_response": "boot-3", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "boot-3", "ip_is_private": true, "invert": true}], "action": "route", "server": "node-3", "race": true, "timeout": "2s"},
+      {"type": "logical", "mode": "and", "rules": [{"inbound": "node-dns-in"}, {"match_response": "boot-4", "response_rcode": "NOERROR", "ip_accept_any": true}, {"match_response": "boot-4", "ip_is_private": true, "invert": true}], "action": "route", "server": "node-4", "race": true, "timeout": "2s"},
+      {"inbound": "node-dns-in", "action": "reject"},
       {"clash_mode": "Direct", "server": "ali"},
       {"clash_mode": "Global", "server": "fakeip"},
       {"rule_set": ["fakeipfilter-cn", "geosite-cn", "geosite-microsoft@cn", "geosite-apple@cn", "geosite-private"], "server": "ali"},
@@ -64,6 +79,7 @@
   ],
   "route": {
     "rules": [
+      {"inbound": "node-dns-in", "action": "hijack-dns"},
       {"type": "logical", "mode": "and", "rules": [{"port": [53, 853], "invert": true}, {"clash_mode": "Global", "invert": true}, {"preferred_by": ["桥接"]}, {"type": "logical", "mode": "or", "rules": [{"ip_is_private": true}, {"rule_set": "geoip-cn"}]}], "outbound": "桥接"},
       {"type": "logical", "mode": "or", "rules": [{"domain_suffix": "push.apple.com"}, {"rule_set": "geoip-telegram"}], "invert": true, "action": "sniff", "sniffer": ["http", "tls", "stun", "quic", "dns"], "timeout": "100ms"},
       {"type": "logical", "mode": "or", "rules": [{"port": 53}, {"protocol": "dns"}], "action": "hijack-dns"},
@@ -119,7 +135,7 @@
     "default_http_client": "直连下载",
     "auto_detect_interface": true,
     "find_process": true,
-    "default_domain_resolver": {"server": "node"}
+    "default_domain_resolver": {"server": "node-bootstrap", "timeout": "5s"}
   },
   "inbounds": [
     {
@@ -143,6 +159,13 @@
       "type": "mixed",
       "listen": "0.0.0.0",
       "listen_port": 7890
+    },
+    {
+      "tag": "node-dns-in",
+      "type": "direct",
+      "listen": "127.0.0.1",
+      "listen_port": 15353,
+      "network": "udp"
     }
   ],
   "services": [
