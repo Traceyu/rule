@@ -4,6 +4,7 @@
     "servers": [
       {"tag": "local", "type": "local", "prefer_go": true},
       {"tag": "ali", "type": "https", "server": "223.5.5.5"},
+      {"tag": "node", "type": "https", "server": "223.5.5.5"},
       {"tag": "tx", "type": "https", "server": "doh.pub", "domain_resolver": "hosts"},
       {"tag": "google", "type": "https", "server": "8.8.8.8", "detour": "默认代理"},
       {"tag": "fakeip", "type": "fakeip", "inet4_range": "198.19.0.0/16"},
@@ -61,13 +62,13 @@
       {"type": "logical", "mode": "or", "rules": [{"port": 53}, {"protocol": "dns"}], "action": "hijack-dns"},
       {"ip_is_private": true, "outbound": "直连"},
       {"process_name": [
-          "ibgateway.exe",
+          "ibgateway.exe"
         ],
         "action": "route",
         "outbound": "直连"
       },
       {"process_name": [
-          "OFT.Platform.exe",
+          "OFT.Platform.exe"
         ],
         "action": "route",
         "outbound": "手动选择"
@@ -111,7 +112,7 @@
     "default_http_client": "直连下载",
     "auto_detect_interface": true,
     "find_process": true,
-    "default_domain_resolver": {"server": "ali"}
+    "default_domain_resolver": {"server": "node"}
   },
   "inbounds": [
     {
