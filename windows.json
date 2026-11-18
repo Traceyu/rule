@@ -4,7 +4,10 @@
     "servers": [
       {"tag": "local", "type": "local", "prefer_go": true},
       {"tag": "ali", "type": "https", "server": "223.5.5.5"},
-      {"tag": "node", "type": "https", "server": "223.5.5.5"},
+      {"tag": "node", "type": "udp", "server": "119.28.28.28"},
+      {"tag": "node-2", "type": "udp", "server": "119.29.29.29"},
+      {"tag": "node-3", "type": "udp", "server": "223.5.5.5"},
+      {"tag": "node-4", "type": "udp", "server": "223.6.6.6"},
       {"tag": "tx", "type": "https", "server": "doh.pub", "domain_resolver": "hosts"},
       {"tag": "google", "type": "https", "server": "8.8.8.8", "detour": "默认代理"},
       {"tag": "fakeip", "type": "fakeip", "inet4_range": "198.19.0.0/16"},
@@ -12,7 +15,10 @@
     ],
     "rules": [
       {"query_type": ["HTTPS", "SVCB"], "action": "reject"},
-      {"domain_suffix": [".sbs"], "server": "node"},
+      {"domain_suffix": [".sbs"], "server": "node", "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "server": "node-2", "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "server": "node-3", "timeout": "2s"},
+      {"domain_suffix": [".sbs"], "server": "node-4"},
       {"clash_mode": "Direct", "server": "ali"},
       {"clash_mode": "Global", "server": "fakeip"},
       {"rule_set": ["fakeipfilter-cn", "geosite-cn", "geosite-microsoft@cn", "geosite-apple@cn", "geosite-private"], "server": "ali"},
